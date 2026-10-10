@@ -1,5 +1,5 @@
 /**
- * The Clean Note - Main JavaScript Controller
+ * Kosmios - Main JavaScript Controller
  * Governs:
  * 1. Accessible Before / After Split Comparison Slider
  * 2. Responsive Navigation Menu
