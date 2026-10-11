@@ -4,12 +4,16 @@
  * 1. Accessible Before / After Split Comparison Slider
  * 2. Responsive Navigation Menu
  * 3. Booking Estimate Form Handler
+ * 4. Cinematic Eased Navigation Scroll & Tactile Link Feedback
+ * 5. Dynamic ScrollSpy Active Link Tracking
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   initComparisonSlider();
   initMobileNavigation();
   initFormHandler();
+  initSmoothNavigation();
+  initScrollSpy();
 });
 
 /* --------------------------------------------------------------------------
@@ -85,7 +89,7 @@ function initComparisonSlider() {
 }
 
 /* --------------------------------------------------------------------------
-   3. Responsive Mobile Navigation
+   2. Responsive Mobile Navigation
    -------------------------------------------------------------------------- */
 function initMobileNavigation() {
   const menuBtn = document.getElementById('mobile-menu-btn');
@@ -118,7 +122,7 @@ function initMobileNavigation() {
 }
 
 /* --------------------------------------------------------------------------
-   4. Booking Form Validation & Submit Feedback
+   3. Booking Form Validation & Submit Feedback
    -------------------------------------------------------------------------- */
 function initFormHandler() {
   const form = document.getElementById('booking-form');
@@ -150,4 +154,194 @@ function initFormHandler() {
       }, 4000);
     }, 800);
   });
+}
+
+/* --------------------------------------------------------------------------
+   4. Cinematic Eased Navigation Scroll & Tactile Link Feedback
+   -------------------------------------------------------------------------- */
+function initSmoothNavigation() {
+  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Cubic easing function (easeInOutCubic) for luxurious, gentle deceleration
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  let activeAnimationId = null;
+
+  function stopActiveScroll() {
+    if (activeAnimationId !== null) {
+      cancelAnimationFrame(activeAnimationId);
+      activeAnimationId = null;
+    }
+  }
+
+  // Allow immediate user interruption with wheel, touch, or keys
+  ['wheel', 'touchstart', 'pointerdown'].forEach((evt) => {
+    window.addEventListener(evt, stopActiveScroll, { passive: true });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', 'Space'].includes(e.code)) {
+      stopActiveScroll();
+    }
+  });
+
+  function smoothScrollTo(targetY, duration, onComplete) {
+    if (prefersReducedMotion()) {
+      window.scrollTo(0, targetY);
+      if (onComplete) onComplete();
+      return;
+    }
+
+    stopActiveScroll();
+
+    const startY = window.pageYOffset || document.documentElement.scrollTop;
+    const distance = targetY - startY;
+
+    if (Math.abs(distance) < 2) {
+      window.scrollTo(0, targetY);
+      if (onComplete) onComplete();
+      return;
+    }
+
+    let startTime = null;
+
+    function frame(currentTime) {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeInOutCubic(progress);
+
+      window.scrollTo(0, startY + distance * eased);
+
+      if (progress < 1) {
+        activeAnimationId = requestAnimationFrame(frame);
+      } else {
+        activeAnimationId = null;
+        if (onComplete) onComplete();
+      }
+    }
+
+    activeAnimationId = requestAnimationFrame(frame);
+  }
+
+  // Intercept all anchor link clicks
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const hash = link.getAttribute('href');
+    if (!hash || hash === '#') return;
+
+    const targetEl = document.querySelector(hash);
+    if (!targetEl) return;
+
+    e.preventDefault();
+
+    // Visual tactile press and pulse feedback
+    link.classList.remove('nav-link--pressed', 'nav-link--pulse');
+    void link.offsetWidth; // Reflow to restart animation
+    link.classList.add('nav-link--pressed', 'nav-link--pulse');
+    setTimeout(() => {
+      link.classList.remove('nav-link--pressed', 'nav-link--pulse');
+    }, 450);
+
+    // Immediate active link indication for main navigation links
+    const mainNav = document.getElementById('main-navigation');
+    if (mainNav && mainNav.contains(link)) {
+      mainNav.querySelectorAll('.nav-link').forEach((l) => l.classList.remove('is-active'));
+      link.classList.add('is-active');
+    }
+
+    // Dynamic header height measurement
+    const header = document.getElementById('main-header');
+    const headerHeight = header ? header.offsetHeight : 80;
+
+    let targetY = 0;
+    if (hash !== '#main-header') {
+      const rect = targetEl.getBoundingClientRect();
+      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+      targetY = Math.max(0, rect.top + currentScrollY - headerHeight);
+    }
+
+    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const distance = Math.abs(targetY - currentScrollY);
+
+    // Dynamic duration (550ms to 900ms based on distance)
+    const duration = Math.min(900, Math.max(550, Math.round(distance * 0.35)));
+
+    smoothScrollTo(targetY, duration, () => {
+      if (history.pushState) {
+        history.pushState(null, '', hash);
+      } else {
+        window.location.hash = hash;
+      }
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   5. Dynamic ScrollSpy Active Link Tracking
+   -------------------------------------------------------------------------- */
+function initScrollSpy() {
+  const navLinks = document.querySelectorAll('.main-nav .nav-link[href^="#"]');
+  if (!navLinks.length) return;
+
+  const sections = [];
+  navLinks.forEach((link) => {
+    const hash = link.getAttribute('href');
+    if (hash && hash !== '#') {
+      const target = document.querySelector(hash);
+      if (target) {
+        sections.push({ target, link });
+      }
+    }
+  });
+
+  if (!sections.length) return;
+
+  const header = document.getElementById('main-header');
+  const getHeaderHeight = () => (header ? header.offsetHeight : 80);
+
+  let isTicking = false;
+
+  function updateActive() {
+    const headerHeight = getHeaderHeight();
+    const probeY = headerHeight + 100;
+    let currentLink = null;
+
+    for (const item of sections) {
+      const rect = item.target.getBoundingClientRect();
+      if (rect.top <= probeY && rect.bottom > probeY) {
+        currentLink = item.link;
+        break;
+      }
+    }
+
+    // Activate the last section link when scrolled to the very bottom
+    const scrollBottom = window.innerHeight + (window.pageYOffset || document.documentElement.scrollTop);
+    if (scrollBottom >= document.documentElement.scrollHeight - 50) {
+      currentLink = sections[sections.length - 1].link;
+    }
+
+    navLinks.forEach((link) => {
+      if (link === currentLink) {
+        link.classList.add('is-active');
+      } else {
+        link.classList.remove('is-active');
+      }
+    });
+
+    isTicking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!isTicking) {
+      requestAnimationFrame(updateActive);
+      isTicking = true;
+    }
+  }, { passive: true });
+
+  updateActive();
 }
