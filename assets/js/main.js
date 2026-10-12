@@ -1,91 +1,19 @@
 /**
  * Kosmios - Main JavaScript Controller
  * Governs:
- * 1. Accessible Before / After Split Comparison Slider
- * 2. Responsive Navigation Menu
- * 3. Booking Estimate Form Handler
+ * 1. Responsive Navigation Menu
+ * 2. Booking Estimate Form Handler
+ * 3. Navigation Scrollspy Active Indicator
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initComparisonSlider();
   initMobileNavigation();
   initFormHandler();
+  initScrollspy();
 });
 
 /* --------------------------------------------------------------------------
-   1. Interactive Before / After Split Comparison Slider
-   -------------------------------------------------------------------------- */
-function initComparisonSlider() {
-  const container = document.getElementById('split-slider');
-  const clip = document.getElementById('slider-clip');
-  const handle = document.getElementById('slider-handle');
-
-  if (!container || !clip || !handle) return;
-
-  let isDragging = false;
-
-  function updateSliderPosition(clientX) {
-    const rect = container.getBoundingClientRect();
-    let offsetX = clientX - rect.left;
-
-    // Constrain within bounds (0% to 100%)
-    if (offsetX < 0) offsetX = 0;
-    if (offsetX > rect.width) offsetX = rect.width;
-
-    const percentage = (offsetX / rect.width) * 100;
-    setSliderPercentage(percentage);
-  }
-
-  function setSliderPercentage(percentage) {
-    const clamped = Math.max(0, Math.min(100, percentage));
-    clip.style.width = `${clamped}%`;
-    handle.style.left = `${clamped}%`;
-    handle.setAttribute('aria-valuenow', Math.round(clamped).toString());
-  }
-
-  // Pointer / Mouse / Touch Events
-  handle.addEventListener('pointerdown', (e) => {
-    isDragging = true;
-    handle.setPointerCapture(e.pointerId);
-    e.preventDefault();
-  });
-
-  container.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
-    updateSliderPosition(e.clientX);
-  });
-
-  window.addEventListener('pointerup', () => {
-    isDragging = false;
-  });
-
-  // Clicking anywhere on the comparison container shifts the divider
-  container.addEventListener('click', (e) => {
-    if (e.target.closest('.slider-handle')) return;
-    updateSliderPosition(e.clientX);
-  });
-
-  // Keyboard Navigation (Left / Right Arrow Keys)
-  handle.addEventListener('keydown', (e) => {
-    const currentVal = parseFloat(handle.getAttribute('aria-valuenow') || '50');
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSliderPercentage(currentVal - 2);
-    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSliderPercentage(currentVal + 2);
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      setSliderPercentage(0);
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      setSliderPercentage(100);
-    }
-  });
-}
-
-/* --------------------------------------------------------------------------
-   3. Responsive Mobile Navigation
+   1. Responsive Mobile Navigation
    -------------------------------------------------------------------------- */
 function initMobileNavigation() {
   const menuBtn = document.getElementById('mobile-menu-btn');
@@ -118,7 +46,7 @@ function initMobileNavigation() {
 }
 
 /* --------------------------------------------------------------------------
-   4. Booking Form Validation & Submit Feedback
+   2. Booking Form Validation & Submit Feedback
    -------------------------------------------------------------------------- */
 function initFormHandler() {
   const form = document.getElementById('booking-form');
@@ -150,4 +78,110 @@ function initFormHandler() {
       }, 4000);
     }, 800);
   });
+}
+
+/* --------------------------------------------------------------------------
+   3. Navigation Scrollspy Active Indicator
+   -------------------------------------------------------------------------- */
+function initScrollspy() {
+  const mainNav = document.getElementById('main-navigation');
+  if (!mainNav) return;
+
+  const navLinks = mainNav.querySelectorAll('.nav-link');
+  if (!navLinks.length) return;
+
+  const trackedSections = [];
+  navLinks.forEach((link) => {
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const section = document.querySelector(href);
+      if (section) {
+        trackedSections.push({ link, section, id: section.id });
+      }
+    }
+  });
+
+  if (!trackedSections.length) return;
+
+  let isClickScrolling = false;
+  let clickTimeout = null;
+
+  function setActive(activeId) {
+    trackedSections.forEach(({ link, id }) => {
+      link.classList.toggle('active', id === activeId);
+    });
+  }
+
+  function updateActiveLink() {
+    if (isClickScrolling) return;
+
+    const header = document.getElementById('main-header');
+    const headerHeight = header ? header.offsetHeight : 80;
+    const probeOffset = headerHeight + 50;
+    const scrollY = window.scrollY || window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight;
+    const winHeight = window.innerHeight;
+
+    let activeId = trackedSections[0].id;
+
+    // If reached bottom of document, activate the last section
+    if (winHeight + scrollY >= docHeight - 50) {
+      activeId = trackedSections[trackedSections.length - 1].id;
+    } else {
+      for (let i = 0; i < trackedSections.length; i++) {
+        const rect = trackedSections[i].section.getBoundingClientRect();
+        if (rect.top <= probeOffset) {
+          activeId = trackedSections[i].id;
+        }
+      }
+    }
+
+    setActive(activeId);
+  }
+
+  // Smooth scroll click handler for nav links
+  trackedSections.forEach(({ link, id }) => {
+    link.addEventListener('click', () => {
+      isClickScrolling = true;
+      clearTimeout(clickTimeout);
+      setActive(id);
+
+      clickTimeout = setTimeout(() => {
+        isClickScrolling = false;
+        updateActiveLink();
+      }, 700);
+    });
+  });
+
+  // Also support clicking brand logo to activate Home
+  const brandLogo = document.querySelector('.brand-logo');
+  if (brandLogo) {
+    brandLogo.addEventListener('click', () => {
+      isClickScrolling = true;
+      clearTimeout(clickTimeout);
+      setActive('hero');
+
+      clickTimeout = setTimeout(() => {
+        isClickScrolling = false;
+        updateActiveLink();
+      }, 700);
+    });
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateActiveLink();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  // Initial calculation on page load
+  updateActiveLink();
 }
