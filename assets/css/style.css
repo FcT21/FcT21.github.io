@@ -805,6 +805,46 @@ button {
   color: var(--color-onyx-muted);
 }
 
+.manifesto-card {
+  background-color: var(--color-canvas-pure);
+  border: 1px solid var(--color-chalk);
+  border-left: 3px solid var(--color-sage);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: 0 4px 16px rgba(14, 42, 71, 0.04);
+  margin-bottom: var(--space-2);
+}
+
+.manifesto-card__quote {
+  font-family: var(--font-brand);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-onyx);
+  margin-bottom: var(--space-2);
+}
+
+.manifesto-card__attribution {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-sage);
+  font-weight: 600;
+  display: block;
+}
+
+.about-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .about-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* --------------------------------------------------------------------------
    13. FAQ Accordion
    -------------------------------------------------------------------------- */
@@ -1245,4 +1285,346 @@ button {
     gap: var(--space-1);
     text-align: center;
   }
+
+  .services-split-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   17. Care Type Segmented Control (Form Selector)
+   -------------------------------------------------------------------------- */
+.care-type-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-chalk);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.care-type-btn {
+  background: transparent;
+  border: none;
+  padding: 0.65rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-onyx-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.care-type-btn:hover {
+  color: var(--color-onyx);
+}
+
+.care-type-btn.active {
+  background-color: var(--color-canvas-pure);
+  color: var(--color-onyx);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(14, 42, 71, 0.08);
+}
+
+.care-type-btn.active .toggle-badge {
+  background-color: var(--color-sage);
+  color: #FFFFFF;
+}
+
+.toggle-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: var(--color-chalk);
+  color: var(--color-onyx-muted);
+  transition: var(--transition-smooth);
+}
+
+/* --------------------------------------------------------------------------
+   18. Split Service Divisions (Overview on index.html)
+   -------------------------------------------------------------------------- */
+.services-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.service-division-card {
+  background-color: var(--color-canvas-pure);
+  border: 1px solid var(--color-chalk);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.service-division-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-sage);
+  box-shadow: var(--shadow-hover);
+}
+
+.service-division-card--featured {
+  border-color: var(--color-sage);
+}
+
+.division-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: var(--color-sage-light);
+  color: var(--color-sage);
+  margin-bottom: var(--space-2);
+}
+
+.division-title {
+  font-size: 1.75rem;
+  font-family: var(--font-display);
+  margin-bottom: var(--space-2);
+  color: var(--color-onyx);
+  line-height: 1.2;
+}
+
+.division-lead {
+  font-size: 0.95rem;
+  color: var(--color-onyx-muted);
+  margin-bottom: var(--space-3);
+  line-height: 1.6;
+}
+
+.division-services-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-4) 0;
+  border-top: 1px solid var(--color-chalk);
+  border-bottom: 1px solid var(--color-chalk);
+  padding: var(--space-2) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.division-services-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--color-onyx);
+}
+
+.division-services-list .bullet-dot {
+  color: var(--color-sage);
+  font-weight: bold;
+}
+
+.division-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   19. Dedicated Service Page Layouts
+   -------------------------------------------------------------------------- */
+.page-hero {
+  padding: var(--space-8) 0 var(--space-6);
+  text-align: center;
+  background: linear-gradient(180deg, rgba(214, 236, 247, 0.4) 0%, rgba(243, 248, 252, 0) 100%);
+  border-bottom: 1px solid var(--color-chalk);
+}
+
+.page-hero__title {
+  font-size: var(--fs-display);
+  font-family: var(--font-display);
+  color: var(--color-onyx);
+  margin-bottom: var(--space-2);
+}
+
+.page-hero__lead {
+  font-size: var(--fs-lead);
+  color: var(--color-onyx-muted);
+  max-width: 720px;
+  margin: 0 auto var(--space-3);
+}
+
+.page-hero__motto {
+  font-family: var(--font-brand);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--color-twilight);
+  display: block;
+}
+
+.container--wide {
+  max-width: 1280px;
+}
+
+.service-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+@media (max-width: 992px) {
+  .service-detail-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+/* Symmetrical 4-Card Grid for Business */
+.service-detail-grid--business,
+.service-detail-grid--4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+  margin: var(--space-6) 0;
+}
+
+.service-detail-grid--business .service-detail-card,
+.service-detail-grid--4col .service-detail-card {
+  padding: var(--space-4) var(--space-3);
+}
+
+@media (max-width: 1180px) {
+  .service-detail-grid--business,
+  .service-detail-grid--4col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .service-detail-grid--business .service-detail-card,
+  .service-detail-grid--4col .service-detail-card {
+    padding: var(--space-5);
+  }
+}
+
+@media (max-width: 640px) {
+  .service-detail-grid--business,
+  .service-detail-grid--4col {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .service-detail-grid--business .service-detail-card,
+  .service-detail-grid--4col .service-detail-card {
+    padding: var(--space-4);
+  }
+}
+
+.service-detail-card {
+  background-color: var(--color-canvas-pure);
+  border: 1px solid var(--color-chalk);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.service-detail-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-sage);
+  box-shadow: var(--shadow-hover);
+}
+
+.service-detail-card--anchor {
+  border-color: var(--color-sage);
+  position: relative;
+}
+
+.service-detail-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: var(--color-sage-light);
+  color: var(--color-sage);
+  margin-bottom: var(--space-2);
+  transition: var(--transition-smooth);
+}
+
+.service-detail-card:hover .service-detail-badge,
+.service-detail-card--anchor .service-detail-badge {
+  background-color: var(--color-sage);
+  color: #FFFFFF;
+}
+
+.program-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-sage);
+  margin-bottom: var(--space-1);
+}
+
+.program-title {
+  font-size: 1.45rem;
+  font-family: var(--font-display);
+  margin-bottom: var(--space-2);
+  color: var(--color-onyx);
+}
+
+.program-desc {
+  font-size: 0.92rem;
+  color: var(--color-onyx-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-3);
+}
+
+.program-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--color-chalk);
+  padding-top: var(--space-2);
+}
+
+.program-features li {
+  font-size: 0.88rem;
+  color: var(--color-onyx);
+  position: relative;
+  padding-left: 18px;
+}
+
+.program-features li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--color-sage);
+  font-weight: bold;
+}
+
+.program-cta {
+  margin-top: auto;
+  padding-top: var(--space-2);
 }
