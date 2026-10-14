@@ -140,8 +140,6 @@
           <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
           <li class="nav-item"><a href="for-homes.html" class="nav-link">For Homes</a></li>
           <li class="nav-item"><a href="for-business.html" class="nav-link active">For Business</a></li>
-          <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
-          <li class="nav-item"><a href="index.html#faq" class="nav-link">FAQ</a></li>
           <li class="nav-item"><a href="#quote" class="nav-link">Request Quote</a></li>
         </ul>
       </nav>
@@ -386,17 +384,6 @@
           </p>
 
           <form class="booking-form" id="booking-form" action="#" method="POST" novalidate="">
-            <div class="care-type-toggle" role="group" aria-label="Select Care Category">
-              <button type="button" class="care-type-btn" data-type="residential" aria-pressed="false">
-                <span>For Homes</span>
-                <span class="toggle-badge">Reserve</span>
-              </button>
-              <button type="button" class="care-type-btn active" data-type="commercial" aria-pressed="true">
-                <span>For Business</span>
-                <span class="toggle-badge">Quote</span>
-              </button>
-            </div>
-
             <div class="form-row">
               <div class="form-group">
                 <label for="full-name">Full Name or Company Rep <span class="required" aria-hidden="true">*</span></label>
@@ -416,8 +403,8 @@
               <div class="form-group">
                 <label for="service-choice">Commercial Service Required <span class="required" aria-hidden="true">*</span></label>
                 <select id="service-choice" name="service" required="" class="form-select">
-                  <option value="" disabled="disabled">Select a Commercial Service</option>
-                  <option value="office" selected="selected">Office &amp; Commercial Cleaning (Recurring Small Office)</option>
+                  <option value="" disabled="disabled" selected="selected">Select a Commercial Service</option>
+                  <option value="office">Office &amp; Commercial Cleaning (Recurring Small Office)</option>
                   <option value="property">Property Management &amp; Unit Turnovers</option>
                   <option value="realestate">Real Estate Partner Program (Pre-Listing &amp; Staging)</option>
                   <option value="postconstruction">Post-Construction &amp; Post-Renovation Detailing</option>

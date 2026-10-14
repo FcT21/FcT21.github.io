@@ -132,8 +132,6 @@
           <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
           <li class="nav-item"><a href="for-homes.html" class="nav-link active">For Homes</a></li>
           <li class="nav-item"><a href="for-business.html" class="nav-link">For Business</a></li>
-          <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
-          <li class="nav-item"><a href="index.html#faq" class="nav-link">FAQ</a></li>
           <li class="nav-item"><a href="#booking" class="nav-link">Reserve</a></li>
         </ul>
       </nav>
@@ -350,17 +348,6 @@
           </p>
 
           <form class="booking-form" id="booking-form" action="#" method="POST" novalidate="">
-            <div class="care-type-toggle" role="group" aria-label="Select Care Category">
-              <button type="button" class="care-type-btn active" data-type="residential" aria-pressed="true">
-                <span>For Homes</span>
-                <span class="toggle-badge">Reserve</span>
-              </button>
-              <button type="button" class="care-type-btn" data-type="commercial" aria-pressed="false">
-                <span>For Business</span>
-                <span class="toggle-badge">Quote</span>
-              </button>
-            </div>
-
             <div class="form-row">
               <div class="form-group">
                 <label for="full-name">Full Name <span class="required" aria-hidden="true">*</span></label>
@@ -380,8 +367,8 @@
               <div class="form-group">
                 <label for="service-choice">Desired Residential Plan <span class="required" aria-hidden="true">*</span></label>
                 <select id="service-choice" name="service" required="" class="form-select">
-                  <option value="" disabled="disabled">Select a Residential Plan</option>
-                  <option value="recurring" selected="selected">Recurring Maintenance (Weekly / Bi-Weekly / Monthly)</option>
+                  <option value="" disabled="disabled" selected="selected">Select a Residential Plan</option>
+                  <option value="recurring">Recurring Maintenance (Weekly / Bi-Weekly / Monthly)</option>
                   <option value="deep">Deep Restorative Clean (First-Clean Reset)</option>
                   <option value="move">Move-In / Move-Out (Realtor &amp; Relocation)</option>
                 </select>
