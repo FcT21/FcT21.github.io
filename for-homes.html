@@ -12,16 +12,21 @@
   <meta property="og:url" content="https://www.kosmios.ca/for-homes.html">
   <meta property="og:title" content="For Homes | Kosmios Residential Cleaning">
   <meta property="og:description" content="Reliable, plant-based residential cleaning in Ottawa. Recurring home plans, deep restorative resets, and move-in/out services.">
+  <meta property="og:image" content="https://www.kosmios.ca/assets/images/kosmios-og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kosmios - Thoughtful Cleaning for the Comfort of Home in Ottawa">
 
   <!-- Twitter Meta -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="For Homes | Kosmios Residential Cleaning">
   <meta name="twitter:description" content="Reliable, plant-based residential cleaning in Ottawa. Recurring home plans, deep restorative resets, and move-in/out services.">
+  <meta name="twitter:image" content="https://www.kosmios.ca/assets/images/kosmios-og-card.png">
 
   <!-- Preconnect to Font Hosts & font-display: swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Jost:wght@400;500;600&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
 
   <!-- Primary Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -134,11 +139,14 @@
           <li class="nav-item"><a href="for-business.html" class="nav-link">For Business</a></li>
           <li class="nav-item"><a href="#booking" class="nav-link">Reserve</a></li>
         </ul>
+        <div class="nav-cta">
+          <a href="#booking" class="btn btn--primary">Reserve Your Clean</a>
+        </div>
       </nav>
 
       <!-- Header Controls: Primary CTA -->
       <div class="header-actions">
-        <a href="#booking" class="btn btn--primary">Reserve Your Clean</a>
+        <a href="#booking" class="btn btn--primary header-cta--desktop">Reserve Your Clean</a>
 
         <!-- Mobile Menu Toggle Button -->
         <button type="button" class="mobile-toggle" id="mobile-menu-btn" aria-expanded="false" aria-controls="main-navigation" aria-label="Toggle navigation menu">
@@ -347,7 +355,12 @@
             Tell us about your home below. We will provide a clear, transparent quote and confirm your preferred schedule.
           </p>
 
-          <form class="booking-form" id="booking-form" action="#" method="POST" novalidate="">
+          <form class="booking-form" id="booking-form" action="https://formspree.io/f/moejblky" method="POST" novalidate="">
+            <!-- Formspree Configuration & Anti-Spam -->
+            <input type="hidden" name="_subject" value="New Home Cleaning Reservation - Kosmios">
+            <input type="hidden" name="care_category" value="Residential Care">
+            <input type="text" name="_gotcha" style="display:none !important;" tabindex="-1" autocomplete="off">
+
             <div class="form-row">
               <div class="form-group">
                 <label for="full-name">Full Name <span class="required" aria-hidden="true">*</span></label>
@@ -383,6 +396,7 @@
             <div class="form-actions">
               <button type="submit" class="btn btn--primary btn--block">Reserve Your Clean</button>
             </div>
+            <div class="form-status-message" id="form-status-message" aria-live="polite"></div>
             <p class="form-privacy-note">
               We respect your domestic privacy. Your details are never shared or sold.
             </p>

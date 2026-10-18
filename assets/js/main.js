@@ -7,12 +7,19 @@
  * 4. Organic Smooth Scroll Controller
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
+  document.documentElement.style.scrollBehavior = 'auto';
   initMobileNavigation();
   initFormHandler();
   initScrollspy();
   initSmoothScroll();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 
 /* --------------------------------------------------------------------------
    1. Responsive Mobile Navigation
@@ -89,10 +96,43 @@ function initFormHandler() {
     }
   };
 
+  const FORMSPREE_ENDPOINTS = {
+    residential: 'https://formspree.io/f/moejblky',
+    commercial: 'https://formspree.io/f/mbgdbarn'
+  };
+
+  const statusMessage = document.getElementById('form-status-message');
+  const categoryInput = document.getElementById('care-category-input');
+  const subjectInput = document.getElementById('form-subject-input');
+
+  let currentCareType = isBusinessPage ? 'commercial' : 'residential';
+
+  function showStatus(type, message) {
+    if (!statusMessage) return;
+    statusMessage.className = 'form-status-message form-status-message--' + type;
+    statusMessage.textContent = message;
+    statusMessage.style.display = 'block';
+  }
+
+  function clearStatus() {
+    if (!statusMessage) return;
+    statusMessage.className = 'form-status-message';
+    statusMessage.textContent = '';
+    statusMessage.style.display = 'none';
+  }
+
+  form.addEventListener('input', () => {
+    if (statusMessage && statusMessage.classList.contains('form-status-message--error')) {
+      clearStatus();
+    }
+  });
+
   function setCareType(type) {
     // If on a dedicated page, strictly prevent switching to the opposing service
     if (isHomesPage && type !== 'residential') return;
     if (isBusinessPage && type !== 'commercial') return;
+
+    currentCareType = type;
 
     toggleBtns.forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.type === type);
@@ -100,6 +140,19 @@ function initFormHandler() {
     });
 
     const config = servicesData[type] || servicesData.residential;
+
+    if (categoryInput) {
+      categoryInput.value = type === 'commercial' ? 'Commercial Care' : 'Residential Care';
+    }
+    if (subjectInput) {
+      subjectInput.value = type === 'commercial'
+        ? 'New Commercial Quote Inquiry - Kosmios'
+        : 'New Home Cleaning Reservation - Kosmios';
+    }
+
+    if (FORMSPREE_ENDPOINTS[type]) {
+      form.action = FORMSPREE_ENDPOINTS[type];
+    }
 
     // Only rebuild select options dynamically on general pages with toggles (e.g., index.html)
     if (serviceSelect && !isHomesPage && !isBusinessPage) {
@@ -159,30 +212,89 @@ function initFormHandler() {
     });
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearStatus();
+
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
 
+    const endpoint = FORMSPREE_ENDPOINTS[currentCareType];
+    const isCommercial = currentCareType === 'commercial';
     const currentText = submitBtn.textContent;
-    submitBtn.textContent = 'Processing...';
+    submitBtn.textContent = 'Submitting...';
     submitBtn.disabled = true;
 
-    setTimeout(() => {
-      submitBtn.textContent = 'Request Received ✓';
-      submitBtn.style.backgroundColor = 'var(--color-sage)';
-      submitBtn.style.borderColor = 'var(--color-sage)';
-      form.reset();
-
+    // Fallback if endpoint is unconfigured
+    if (!endpoint) {
       setTimeout(() => {
+        submitBtn.textContent = isCommercial ? 'Inquiry Received ✓' : 'Reservation Received ✓';
+        submitBtn.style.backgroundColor = 'var(--color-sage)';
+        submitBtn.style.borderColor = 'var(--color-sage)';
+        showStatus('success', 'Thank you! For immediate assistance, please call (555) 234-5678 or email info@kosmios.ca.');
+        form.reset();
+
+        setTimeout(() => {
+          submitBtn.textContent = currentText;
+          submitBtn.disabled = false;
+          submitBtn.style.backgroundColor = '';
+          submitBtn.style.borderColor = '';
+        }, 5000);
+      }, 700);
+      return;
+    }
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        submitBtn.textContent = isCommercial ? 'Quote Requested ✓' : 'Reservation Received ✓';
+        submitBtn.style.backgroundColor = 'var(--color-sage)';
+        submitBtn.style.borderColor = 'var(--color-sage)';
+
+        const successMessage = isCommercial
+          ? 'Thank you! Your commercial quote request has been received. Our team will review your facility requirements and reach out within 24 hours to provide an itemized proposal or arrange a walkthrough.'
+          : 'Thank you! Your home cleaning reservation request has been received. Our team will review your home details and reach out within 24 hours to confirm your schedule.';
+
+        showStatus('success', successMessage);
+        form.reset();
+
+        if (!isHomesPage && !isBusinessPage) {
+          setCareType('residential');
+        }
+
+        setTimeout(() => {
+          submitBtn.textContent = currentText;
+          submitBtn.disabled = false;
+          submitBtn.style.backgroundColor = '';
+          submitBtn.style.borderColor = '';
+        }, 5000);
+      } else {
+        const data = await response.json().catch(() => ({}));
+        let errorMsg = isCommercial
+          ? 'There was an issue sending your quote request. Please try again or reach us at info@kosmios.ca or (555) 234-5678.'
+          : 'There was an issue sending your reservation. Please try again or reach us at info@kosmios.ca or (555) 234-5678.';
+        if (data.errors && data.errors.length) {
+          errorMsg = data.errors.map((err) => err.message).join('. ');
+        }
+        showStatus('error', errorMsg);
         submitBtn.textContent = currentText;
         submitBtn.disabled = false;
-        submitBtn.style.backgroundColor = '';
-        submitBtn.style.borderColor = '';
-      }, 4000);
-    }, 800);
+      }
+    } catch (err) {
+      showStatus('error', 'Network error. Please check your connection or contact us directly at info@kosmios.ca or (555) 234-5678.');
+      submitBtn.textContent = currentText;
+      submitBtn.disabled = false;
+    }
   });
 }
 
@@ -212,20 +324,20 @@ function initScrollspy() {
   // Configure tracked sections based on current page
   const sectionsConfig = isHomesPage
     ? [
-        { id: 'home', fallbackId: 'main-content', link: mainNav.querySelector('a[href*="for-homes"]') },
-        { id: 'booking', link: mainNav.querySelector('a[href="#booking"]') }
+        { id: 'home', fallbackId: 'main-content', link: mainNav.querySelector('.nav-link[href*="for-homes"]') },
+        { id: 'booking', link: mainNav.querySelector('.nav-link[href="#booking"]') }
       ]
     : isBusinessPage
     ? [
-        { id: 'home', fallbackId: 'main-content', link: mainNav.querySelector('a[href*="for-business"]') },
-        { id: 'quote', link: mainNav.querySelector('a[href="#quote"]') }
+        { id: 'home', fallbackId: 'main-content', link: mainNav.querySelector('.nav-link[href*="for-business"]') },
+        { id: 'quote', link: mainNav.querySelector('.nav-link[href="#quote"]') }
       ]
     : [
-        { id: 'hero', fallbackId: 'home', link: mainNav.querySelector('a[href="#home"]') },
-        { id: 'about', link: mainNav.querySelector('a[href="#about"]') },
+        { id: 'hero', fallbackId: 'home', link: mainNav.querySelector('.nav-link[href="#home"]') },
+        { id: 'about', link: mainNav.querySelector('.nav-link[href="#about"]') },
         { id: 'services', link: null },
-        { id: 'faq', link: mainNav.querySelector('a[href="#faq"]') },
-        { id: 'contact', link: mainNav.querySelector('a[href="#contact"]') }
+        { id: 'faq', link: mainNav.querySelector('.nav-link[href="#faq"]') },
+        { id: 'contact', link: mainNav.querySelector('.nav-link[href="#contact"]') }
       ];
 
   const trackedSections = [];
@@ -310,23 +422,12 @@ function smoothScrollTo(targetY, options = {}) {
     updateHash = null
   } = options;
 
-  // Accessibility: instant scroll if user prefers reduced motion
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    if (onStart) onStart();
-    window.scrollTo(0, targetY);
-    if (updateHash && window.location.hash !== updateHash) {
-      try { history.pushState(null, '', updateHash); } catch (_) {}
-    }
-    if (onComplete) onComplete();
-    return;
-  }
-
   if (activeScrollAnimation) {
     cancelAnimationFrame(activeScrollAnimation);
     activeScrollAnimation = null;
   }
 
-  const startY = window.pageYOffset || document.documentElement.scrollTop;
+  const startY = window.pageYOffset || document.documentElement.scrollTop || 0;
   const distance = targetY - startY;
 
   if (Math.abs(distance) < 2) {
@@ -337,14 +438,19 @@ function smoothScrollTo(targetY, options = {}) {
     return;
   }
 
-  // Adaptive duration: ~700ms base, up to ~900ms for longer distances
+  // Adaptive duration: ~700ms base, scaling smoothly up to ~900ms based on distance
   const animDuration = duration || Math.min(900, Math.max(700, 700 + (Math.abs(distance) / 2500) * 200));
   let startTime = null;
+  const animStartTime = performance.now();
   isScrollAnimating = true;
 
   if (onStart) onStart();
 
-  function cancelOnUserInteraction() {
+  function cancelOnUserInteraction(e) {
+    // Ignore events in the first 150ms to prevent gesture/click triggers from canceling
+    if (performance.now() - animStartTime < 150) return;
+    if (e && e.type === 'wheel' && Math.abs(e.deltaY) < 3) return;
+
     if (activeScrollAnimation) {
       cancelAnimationFrame(activeScrollAnimation);
       activeScrollAnimation = null;
@@ -370,7 +476,8 @@ function smoothScrollTo(targetY, options = {}) {
     const progress = Math.min(elapsed / animDuration, 1);
     const easedProgress = easeInOutCubic(progress);
 
-    window.scrollTo(0, Math.round(startY + distance * easedProgress));
+    const currentY = Math.round(startY + distance * easedProgress);
+    window.scrollTo(0, currentY);
 
     if (progress < 1) {
       activeScrollAnimation = requestAnimationFrame(step);
@@ -401,7 +508,7 @@ function initSmoothScroll() {
     }
     const headerHeight = header ? header.offsetHeight : 80;
     const rect = targetElem.getBoundingClientRect();
-    const docTop = rect.top + (window.pageYOffset || document.documentElement.scrollTop);
+    const docTop = rect.top + (window.pageYOffset || document.documentElement.scrollTop || 0);
     const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     return Math.max(0, Math.min(docTop - headerHeight, maxScroll));
   }
@@ -475,30 +582,31 @@ function initSmoothScroll() {
       return;
     }
 
-    // Only process in-page anchor links
-    if (!href.includes('#')) return;
-
-    let url;
-    try {
-      url = new URL(link.href, window.location.href);
-    } catch (_) {
-      return;
+    // Determine target hash for in-page anchors
+    let hash = '';
+    if (href.startsWith('#')) {
+      hash = href;
+    } else if (href.includes('#')) {
+      try {
+        const url = new URL(link.href, window.location.href);
+        const currentPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+        const targetPath = url.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+        if (currentPath === targetPath) {
+          hash = url.hash;
+        }
+      } catch (_) {}
     }
 
-    const currentPath = window.location.pathname.replace(/\/index\.html$/, '/');
-    const targetPath = url.pathname.replace(/\/index\.html$/, '/');
-
-    if (currentPath !== targetPath) {
-      // Cross-page link with anchor; allow normal navigation (arrival animation will trigger on destination page)
-      return;
-    }
-
-    const hash = url.hash;
     if (!hash || hash === '#') return;
 
-    const targetElem = document.querySelector(hash);
+    let targetElem = null;
+    try {
+      targetElem = document.querySelector(hash);
+    } catch (_) {}
+
     if (!targetElem) return;
 
+    // Prevent native instant jump
     e.preventDefault();
 
     // Close mobile menu if open
@@ -529,7 +637,11 @@ function initSmoothScroll() {
   // Handle smooth arrival if page is entered with an anchor in the URL (e.g. index.html#about or for-homes.html#booking)
   if (window.location.hash) {
     const rawHash = window.location.hash;
-    const target = document.querySelector(rawHash);
+    let target = null;
+    try {
+      target = document.querySelector(rawHash);
+    } catch (_) {}
+
     if (target && rawHash !== '#home' && rawHash !== '#top') {
       try {
         if ('scrollRestoration' in history) {

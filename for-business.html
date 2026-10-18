@@ -12,16 +12,21 @@
   <meta property="og:url" content="https://www.kosmios.ca/for-business.html">
   <meta property="og:title" content="For Business | Kosmios Commercial Cleaning">
   <meta property="og:description" content="Reliable commercial office cleaning, property management unit turnovers, realtor partner programs, and post-renovation cleaning in Ottawa.">
+  <meta property="og:image" content="https://www.kosmios.ca/assets/images/kosmios-og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kosmios - Reliable Cleaning for Workspaces &amp; Property Partners in Ottawa">
 
   <!-- Twitter Meta -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="For Business | Kosmios Commercial Cleaning">
   <meta name="twitter:description" content="Reliable commercial office cleaning, property management unit turnovers, realtor partner programs, and post-renovation cleaning in Ottawa.">
+  <meta name="twitter:image" content="https://www.kosmios.ca/assets/images/kosmios-og-card.png">
 
   <!-- Preconnect to Font Hosts & font-display: swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Jost:wght@400;500;600&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
 
   <!-- Primary Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -142,11 +147,14 @@
           <li class="nav-item"><a href="for-business.html" class="nav-link active">For Business</a></li>
           <li class="nav-item"><a href="#quote" class="nav-link">Request Quote</a></li>
         </ul>
+        <div class="nav-cta">
+          <a href="#quote" class="btn btn--primary">Request a Quote</a>
+        </div>
       </nav>
 
       <!-- Header Controls: Primary CTA -->
       <div class="header-actions">
-        <a href="#quote" class="btn btn--primary">Request a Quote</a>
+        <a href="#quote" class="btn btn--primary header-cta--desktop">Request a Quote</a>
 
         <!-- Mobile Menu Toggle Button -->
         <button type="button" class="mobile-toggle" id="mobile-menu-btn" aria-expanded="false" aria-controls="main-navigation" aria-label="Toggle navigation menu">
@@ -383,7 +391,12 @@
             Tell us about your facility or project scope. We will provide a prompt, itemized quote or arrange an on-site walkthrough.
           </p>
 
-          <form class="booking-form" id="booking-form" action="#" method="POST" novalidate="">
+          <form class="booking-form" id="booking-form" action="https://formspree.io/f/mbgdbarn" method="POST" novalidate="">
+            <!-- Anti-Spam & Category Tracking -->
+            <input type="hidden" name="_subject" id="form-subject-input" value="New Commercial Quote Inquiry - Kosmios">
+            <input type="hidden" name="care_category" id="care-category-input" value="Commercial Care">
+            <input type="text" name="_gotcha" style="display:none !important;" tabindex="-1" autocomplete="off">
+
             <div class="form-row">
               <div class="form-group">
                 <label for="full-name">Full Name or Company Rep <span class="required" aria-hidden="true">*</span></label>
@@ -420,6 +433,7 @@
             <div class="form-actions">
               <button type="submit" class="btn btn--primary btn--block">Request a Quote</button>
             </div>
+            <div class="form-status-message" id="form-status-message" aria-live="polite"></div>
             <p class="form-privacy-note">
               Commercial proposals are confidential. Your details are never shared or sold.
             </p>

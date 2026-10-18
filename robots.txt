@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Canonical Sitemap
+Sitemap: https://www.kosmios.ca/sitemap.xml

@@ -12,16 +12,21 @@
   <meta property="og:url" content="https://www.kosmios.ca/">
   <meta property="og:title" content="Kosmios | Home &amp; Office Architectural Care · Ottawa">
   <meta property="og:description" content="Conscious hygiene and architectural care for private homes, boutique offices, and property partners across Ottawa. Order is a form of care.">
+  <meta property="og:image" content="https://www.kosmios.ca/assets/images/kosmios-og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kosmios - Architectural Care for Homes &amp; Workspaces in Ottawa">
 
   <!-- Twitter Meta -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kosmios | Home &amp; Office Architectural Care · Ottawa">
   <meta name="twitter:description" content="Conscious hygiene and architectural care for homes and workspaces across Ottawa.">
+  <meta name="twitter:image" content="https://www.kosmios.ca/assets/images/kosmios-og-card.png">
 
   <!-- Preconnect to Font Hosts & font-display: swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Jost:wght@400;500;600&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
 
   <!-- Primary Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -179,11 +184,14 @@
           <li class="nav-item"><a href="#faq" class="nav-link">FAQ</a></li>
           <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
+        <div class="nav-cta">
+          <a href="#contact" class="btn btn--primary">Book / Request Quote</a>
+        </div>
       </nav>
 
       <!-- Header Controls: Primary CTA -->
       <div class="header-actions">
-        <a href="#contact" class="btn btn--primary">Book / Request Quote</a>
+        <a href="#contact" class="btn btn--primary header-cta--desktop">Book / Request Quote</a>
 
         <!-- Mobile Menu Toggle Button -->
         <button type="button" class="mobile-toggle" id="mobile-menu-btn" aria-expanded="false" aria-controls="main-navigation" aria-label="Toggle navigation menu">
@@ -201,6 +209,7 @@
     <section class="hero-section" id="hero" aria-labelledby="hero-title">
       <div class="container">
         <div class="hero-content">
+          <h1 id="hero-title" class="sr-only">Kosmios | Architectural Care &amp; Conscious Hygiene for Homes &amp; Workspaces · Ottawa</h1>
           <div class="section-stave-label">
             <span class="stave-text">Architectural Care for Homes &amp; Workspaces · Ottawa, ON</span>
           </div>
@@ -500,7 +509,12 @@
             Whether reserving private residential care or requesting an executive commercial proposal, we treat every space as the vessel of human life and purpose. Select your discipline below to begin.
           </p>
 
-          <form class="booking-form" id="booking-form" action="#" method="POST" novalidate="">
+          <form class="booking-form" id="booking-form" action="https://formspree.io/f/moejblky" method="POST" novalidate="">
+            <!-- Formspree Configuration & Anti-Spam -->
+            <input type="hidden" name="_subject" id="form-subject-input" value="New Home Cleaning Reservation - Kosmios">
+            <input type="hidden" name="care_category" id="care-category-input" value="Residential Care">
+            <input type="text" name="_gotcha" style="display:none !important;" tabindex="-1" autocomplete="off">
+
             <div class="care-type-toggle" role="group" aria-label="Select Care Category">
               <button type="button" class="care-type-btn active" data-type="residential" aria-pressed="true">
                 <span>For Homes</span>
@@ -547,6 +561,7 @@
             <div class="form-actions">
               <button type="submit" class="btn btn--primary btn--block">Reserve Your Clean</button>
             </div>
+            <div class="form-status-message" id="form-status-message" aria-live="polite"></div>
             <p class="form-privacy-note">
               We respect your privacy. Your details are never shared or sold.
             </p>
