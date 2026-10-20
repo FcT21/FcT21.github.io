@@ -1,0 +1,26 @@
+{
+  "name": "Kosmios Architectural Care",
+  "short_name": "Kosmios",
+  "description": "Architectural care, conscious hygiene, and preventive maintenance for homes and workspaces in Ottawa, ON.",
+  "icons": [
+    {
+      "src": "assets/images/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#0E2A47",
+  "background_color": "#F3F8FC",
+  "display": "standalone",
+  "start_url": "/"
+}

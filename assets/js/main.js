@@ -233,7 +233,7 @@ function initFormHandler() {
         submitBtn.textContent = isCommercial ? 'Inquiry Received ✓' : 'Reservation Received ✓';
         submitBtn.style.backgroundColor = 'var(--color-sage)';
         submitBtn.style.borderColor = 'var(--color-sage)';
-        showStatus('success', 'Thank you! For immediate assistance, please call (555) 234-5678 or email info@kosmios.ca.');
+        showStatus('success', 'Thank you! For immediate assistance, please email info@kosmios.ca.');
         form.reset();
 
         setTimeout(() => {
@@ -281,8 +281,8 @@ function initFormHandler() {
       } else {
         const data = await response.json().catch(() => ({}));
         let errorMsg = isCommercial
-          ? 'There was an issue sending your quote request. Please try again or reach us at info@kosmios.ca or (555) 234-5678.'
-          : 'There was an issue sending your reservation. Please try again or reach us at info@kosmios.ca or (555) 234-5678.';
+          ? 'There was an issue sending your quote request. Please try again or reach us directly at info@kosmios.ca.'
+          : 'There was an issue sending your reservation. Please try again or reach us directly at info@kosmios.ca.';
         if (data.errors && data.errors.length) {
           errorMsg = data.errors.map((err) => err.message).join('. ');
         }
@@ -291,7 +291,7 @@ function initFormHandler() {
         submitBtn.disabled = false;
       }
     } catch (err) {
-      showStatus('error', 'Network error. Please check your connection or contact us directly at info@kosmios.ca or (555) 234-5678.');
+      showStatus('error', 'Network error. Please check your connection or contact us directly at info@kosmios.ca.');
       submitBtn.textContent = currentText;
       submitBtn.disabled = false;
     }
@@ -431,6 +431,18 @@ function smoothScrollTo(targetY, options = {}) {
   const distance = targetY - startY;
 
   if (Math.abs(distance) < 2) {
+    if (updateHash && window.location.hash !== updateHash) {
+      try { history.pushState(null, '', updateHash); } catch (_) {}
+    }
+    if (onComplete) onComplete();
+    return;
+  }
+
+  // Accessibility (WCAG 2.3.3): Respect user preference for reduced motion
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    if (onStart) onStart();
+    window.scrollTo(0, targetY);
     if (updateHash && window.location.hash !== updateHash) {
       try { history.pushState(null, '', updateHash); } catch (_) {}
     }

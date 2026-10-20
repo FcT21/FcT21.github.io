@@ -28,6 +28,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
 
+  <!-- Favicons & Manifest -->
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#0E2A47">
+
   <!-- Primary Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css">
 
@@ -44,7 +52,6 @@
         "provider": {
           "@type": "LocalBusiness",
           "name": "Kosmios",
-          "telephone": "+1-555-234-5678",
           "email": "info@kosmios.ca",
           "areaServed": "Ottawa, ON"
         },
@@ -109,6 +116,7 @@
   </script>
 </head>
 <body id="top">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <div id="home"></div>
 
   <!-- Top Announcement / Contact Bar -->
@@ -120,10 +128,6 @@
         <span class="badge-item"><span class="bullet" aria-hidden="true">•</span> Tailored B2B Master Invoicing</span>
       </div>
       <div class="top-bar__contact">
-        <a href="tel:+15552345678" class="top-bar__link">
-          <span class="icon" aria-hidden="true">📞</span> (555) 234-5678
-        </a>
-        <span class="divider-dot" aria-hidden="true">|</span>
         <a href="mailto:info@kosmios.ca" class="top-bar__link">
           <span class="icon" aria-hidden="true">✉</span> info@kosmios.ca
         </a>
@@ -400,18 +404,18 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="full-name">Full Name or Company Rep <span class="required" aria-hidden="true">*</span></label>
-                <input type="text" id="full-name" name="name" required="" placeholder="Marcus Sterling" class="form-input">
+                <input type="text" id="full-name" name="name" required="" autocomplete="name" placeholder="Marcus Sterling" class="form-input">
               </div>
               <div class="form-group">
                 <label for="email-address">Business Email <span class="required" aria-hidden="true">*</span></label>
-                <input type="email" id="email-address" name="email" required="" placeholder="marcus@company.com" class="form-input">
+                <input type="email" id="email-address" name="email" required="" autocomplete="email" placeholder="marcus@company.com" class="form-input">
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="phone-number">Direct Phone Number <span class="required" aria-hidden="true">*</span></label>
-                <input type="tel" id="phone-number" name="phone" required="" placeholder="(555) 000-0000" class="form-input">
+                <input type="tel" id="phone-number" name="phone" required="" autocomplete="tel" placeholder="(555) 000-0000" class="form-input">
               </div>
               <div class="form-group">
                 <label for="service-choice">Commercial Service Required <span class="required" aria-hidden="true">*</span></label>
@@ -435,7 +439,7 @@
             </div>
             <div class="form-status-message" id="form-status-message" aria-live="polite"></div>
             <p class="form-privacy-note">
-              Commercial proposals are confidential. Your details are never shared or sold.
+              Commercial proposals are confidential. Your details are never shared or sold. <a href="privacy.html">Read our Privacy Policy</a>.
             </p>
           </form>
         </div>
@@ -450,8 +454,8 @@
                 <span class="detail-value">Ottawa &amp; Surrounding National Capital Region</span>
               </li>
               <li>
-                <span class="detail-label">Direct Line:</span>
-                <span class="detail-value"><a href="tel:+15552345678">(555) 234-5678</a></span>
+                <span class="detail-label">Response Time:</span>
+                <span class="detail-value">Within 24 business hours</span>
               </li>
               <li>
                 <span class="detail-label">Commercial Desk:</span>
@@ -515,9 +519,9 @@
       <!-- Col 4: Local & Connect -->
       <div class="footer-col">
         <h4 class="footer-heading">Connect</h4>
-        <p class="footer-contact-item"><strong>Coverage:</strong> Ottawa, ON</p>
-        <p class="footer-contact-item"><strong>Direct:</strong> (555) 234-5678</p>
+        <p class="footer-contact-item"><strong>Coverage:</strong> Ottawa &amp; NCR</p>
         <p class="footer-contact-item"><strong>Email:</strong> info@kosmios.ca</p>
+        <p class="footer-contact-item"><strong>Inquiries:</strong> Online Intake</p>
         <div class="social-links" aria-label="Social media profiles">
           <a href="https://www.instagram.com/kosmios" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
           <span aria-hidden="true">•</span>
@@ -531,7 +535,7 @@
     <!-- Sub-footer Stave -->
     <div class="container footer-sub">
       <div class="footer-sub__copyright">
-        © 2026 Kosmios. All rights reserved. Architectural care for homes and businesses · Ottawa, ON.
+        © 2026 Kosmios. All rights reserved. Architectural care for homes and businesses · Ottawa, ON. · <a href="privacy.html" class="footer-privacy-link">Privacy Policy</a>
       </div>
       <div class="footer-sub__meta">
         <a href="#home">Back to Top ↑</a>
