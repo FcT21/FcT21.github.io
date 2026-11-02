@@ -45,9 +45,9 @@ npx serve .
 
 ```
 Kosmios/
-├── index.html                 # Primary landing page & dual service selector
-├── for-homes.html             # Dedicated residential cleaning service landing
-├── for-business.html          # Dedicated commercial & partner program landing
+├── index.html                 # Unified primary landing: 100% focused on residential home care
+├── for-homes.html             # Seamless canonical redirect to index.html (preserving deep links)
+├── for-business.html          # Preserved B2B template with capacity notice (ready for future scaling)
 ├── privacy.html               # Canadian PIPEDA privacy policy & data governance
 │
 ├── favicon.ico                # Root multi-resolution icon (16x16, 32x32)
@@ -56,6 +56,11 @@ Kosmios/
 ├── sitemap.xml                # Canonical XML sitemap for SEO indexation
 ├── README.md                  # Developer onboarding kit & technical guide
 ├── .gitignore                 # Git ignore rules
+│
+├── info_for_website/          # Brand documentation & archived templates
+│   ├── archived_commercial_for-business.html  # Full backup of commercial B2B structure
+│   ├── archived_dual_index.html               # Full backup of previous dual portal
+│   └── manifesto.txt                          # Philosophical manifesto & core ethos
 │
 └── assets/
     ├── css/

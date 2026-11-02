@@ -154,8 +154,8 @@ function initFormHandler() {
       form.action = FORMSPREE_ENDPOINTS[type];
     }
 
-    // Only rebuild select options dynamically on general pages with toggles (e.g., index.html)
-    if (serviceSelect && !isHomesPage && !isBusinessPage) {
+    // Only rebuild select options dynamically if care-type toggle buttons exist on the page
+    if (serviceSelect && toggleBtns.length > 0) {
       serviceSelect.innerHTML = '';
       config.options.forEach((opt) => {
         const optionElem = document.createElement('option');
@@ -167,9 +167,9 @@ function initFormHandler() {
       });
     }
 
-    if (detailsLabel && !isHomesPage && !isBusinessPage) detailsLabel.textContent = config.detailsLabel;
-    if (detailsInput && !isHomesPage && !isBusinessPage) detailsInput.placeholder = config.detailsPlaceholder;
-    if (submitBtn && !isHomesPage && !isBusinessPage) submitBtn.textContent = config.buttonText;
+    if (detailsLabel && toggleBtns.length > 0) detailsLabel.textContent = config.detailsLabel;
+    if (detailsInput && toggleBtns.length > 0) detailsInput.placeholder = config.detailsPlaceholder;
+    if (submitBtn && toggleBtns.length > 0) submitBtn.textContent = config.buttonText;
   }
 
   toggleBtns.forEach((btn) => {
@@ -182,17 +182,18 @@ function initFormHandler() {
   // Determine initial care type based on dedicated page or URL query params
   if (isBusinessPage) {
     setCareType('commercial');
-  } else if (isHomesPage) {
-    setCareType('residential');
-  } else {
-    // Check URL params for preselection on index.html
+  } else if (toggleBtns.length > 0) {
+    // Check URL params for preselection on pages with toggles
     const urlParams = new URLSearchParams(window.location.search);
     const paramType = urlParams.get('type');
     if (paramType === 'business' || paramType === 'commercial') {
       setCareType('commercial');
-    } else if (paramType === 'homes' || paramType === 'residential') {
+    } else {
       setCareType('residential');
     }
+  } else {
+    // Pure residential mode by default
+    setCareType('residential');
   }
 
   // Support links that pre-select a specific service option (e.g., data-select-service="deep")
@@ -335,9 +336,9 @@ function initScrollspy() {
     : [
         { id: 'hero', fallbackId: 'home', link: mainNav.querySelector('.nav-link[href="#home"]') },
         { id: 'about', link: mainNav.querySelector('.nav-link[href="#about"]') },
-        { id: 'services', link: null },
+        { id: 'plans', fallbackId: 'services', link: mainNav.querySelector('.nav-link[href="#plans"]') },
         { id: 'faq', link: mainNav.querySelector('.nav-link[href="#faq"]') },
-        { id: 'contact', link: mainNav.querySelector('.nav-link[href="#contact"]') }
+        { id: 'contact', fallbackId: 'booking', link: mainNav.querySelector('.nav-link[href="#contact"]') }
       ];
 
   const trackedSections = [];
@@ -528,7 +529,13 @@ function initSmoothScroll() {
   function resolveTargetNavLink(hash) {
     if (!mainNav) return null;
     let targetLink = mainNav.querySelector(`a[href="${hash}"]`);
-    if (!targetLink && (hash === '#home' || hash === '#top' || hash === '#main-header')) {
+    if (!targetLink && (hash === '#booking' || hash === '#contact')) {
+      targetLink = mainNav.querySelector('a[href="#contact"]') || mainNav.querySelector('a[href="#booking"]');
+    }
+    if (!targetLink && (hash === '#plans' || hash === '#services' || hash === '#recurring' || hash === '#deep-clean' || hash === '#move-in-out')) {
+      targetLink = mainNav.querySelector('a[href="#plans"]') || mainNav.querySelector('a[href="#services"]');
+    }
+    if (!targetLink && (hash === '#home' || hash === '#top' || hash === '#main-header' || hash === '#hero')) {
       targetLink = isHomesPage
         ? mainNav.querySelector('a[href*="for-homes"]')
         : isBusinessPage
